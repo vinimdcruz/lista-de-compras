@@ -23,12 +23,8 @@ python3 -m http.server 8000
 
 ## Deploy
 
-O deploy é automático via GitHub Actions: todo push na branch `main` publica o repositório no
-GitHub Pages (workflow em `.github/workflows/deploy-pages.yml`).
-
-App no ar: https://vinimdcruz.github.io/lista-de-compras/
-
-Pré-requisito, uma única vez: em **Settings → Pages**, definir **Source: GitHub Actions**.
+Hospedado na Vercel, conectada a este repositório: todo push na branch `main` republica o site
+automaticamente. Site estático puro — sem build step, sem configuração.
 
 ## Editar os itens
 
