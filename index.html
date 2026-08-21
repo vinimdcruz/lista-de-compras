@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="description" content="Lista de compras de supermercado: marque os itens por categoria e o progresso fica salvo no seu navegador.">
+  <meta name="description" content="Lista de compras de supermercado: monte a lista por categoria, marque os itens e guarde cada compra no histórico.">
   <meta name="theme-color" content="#16a34a">
   <title>Lista de Compras</title>
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛒</text></svg>">
@@ -12,19 +12,39 @@
 <body>
   <header class="topo">
     <div class="topo-linha">
-      <h1>🛒 Lista de Compras</h1>
-      <button id="limpar" class="btn-limpar" type="button">Limpar</button>
+      <input type="date" id="data-lista" class="titulo-data" aria-label="Data da lista">
+      <button id="ver-historico" class="btn-secundario" type="button">
+        📋 Histórico <span id="historico-total" class="pilula">0</span>
+      </button>
     </div>
-    <div class="progresso">
+    <div id="progresso" class="progresso">
       <div class="barra"><div id="barra-preenchida" class="barra-preenchida"></div></div>
       <span id="contador" class="contador">0 de 0 itens</span>
     </div>
   </header>
 
-  <main id="lista" class="lista" aria-live="polite"></main>
+  <main>
+    <section id="vista-lista">
+      <div id="lista" class="lista" aria-live="polite"></div>
+      <div class="acoes">
+        <button id="finalizar" class="btn-principal" type="button">✓ Finalizar compra</button>
+        <button id="limpar" class="btn-secundario" type="button">Desmarcar tudo</button>
+      </div>
+    </section>
+
+    <section id="vista-historico" hidden>
+      <div class="lista">
+        <div class="cabecalho-vista">
+          <h2>Compras registradas</h2>
+          <button id="voltar" class="btn-secundario" type="button">← Voltar</button>
+        </div>
+        <div id="historico"></div>
+      </div>
+    </section>
+  </main>
 
   <footer class="rodape">
-    <p>Seu progresso é salvo automaticamente neste navegador.</p>
+    <p>Sua lista e seu histórico ficam salvos neste navegador.</p>
   </footer>
 
   <script src="app.js" defer></script>
