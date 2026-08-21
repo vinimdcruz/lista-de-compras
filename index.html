@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="description" content="Lista de compras de supermercado: marque os itens por categoria e o progresso fica salvo no seu navegador.">
+  <meta name="theme-color" content="#16a34a">
+  <title>Lista de Compras</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛒</text></svg>">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="topo">
+    <div class="topo-linha">
+      <h1>🛒 Lista de Compras</h1>
+      <button id="limpar" class="btn-limpar" type="button">Limpar</button>
+    </div>
+    <div class="progresso">
+      <div class="barra"><div id="barra-preenchida" class="barra-preenchida"></div></div>
+      <span id="contador" class="contador">0 de 0 itens</span>
+    </div>
+  </header>
+
+  <main id="lista" class="lista" aria-live="polite"></main>
+
+  <footer class="rodape">
+    <p>Seu progresso é salvo automaticamente neste navegador.</p>
+  </footer>
+
+  <script src="app.js" defer></script>
+</body>
+</html>
