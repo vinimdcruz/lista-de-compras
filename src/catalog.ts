@@ -7,6 +7,9 @@ export interface CategoriaSemente {
   readonly itens: readonly string[];
 }
 
+/** Emoji das categorias criadas pela pessoa, já que a tela pede só o nome. */
+export const EMOJI_PADRAO = "🛒";
+
 export const CATALOGO: readonly CategoriaSemente[] = [
   {
     id: "hortifruti",

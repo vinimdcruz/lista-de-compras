@@ -23,7 +23,10 @@ export class VistaLista {
   renderizar(): void {
     preservandoFoco(() => {
       const categorias = this.app.lista.categorias.map((categoria) => this.criarCategoria(categoria));
-      this.elementos.lista.replaceChildren(...categorias);
+      const conteudo = categorias.length
+        ? categorias
+        : [criar("p", { className: "vazio", textContent: "Nenhuma categoria. Crie a primeira abaixo." })];
+      this.elementos.lista.replaceChildren(...conteudo, this.criarNovaCategoria());
     });
     this.atualizarProgresso();
   }
@@ -44,7 +47,7 @@ export class VistaLista {
       this.criarLinhaAdicionar(categoria)
     ]);
 
-    const cabecalho = criar("button", { type: "button", className: "categoria-botao" }, [
+    const alternar = criar("button", { type: "button", className: "categoria-botao" }, [
       criar("span", { className: "categoria-emoji", textContent: categoria.emoji, ariaHidden: "true" }),
       criar("span", { className: "categoria-nome", textContent: categoria.nome }),
       criar("span", {
@@ -53,13 +56,54 @@ export class VistaLista {
       }),
       criar("span", { className: "seta", textContent: "▶", ariaHidden: "true" })
     ]);
-    definirAria(cabecalho, { "aria-expanded": String(aberta), "aria-controls": idItens });
-
-    cabecalho.addEventListener("click", () => {
+    definirAria(alternar, { "aria-expanded": String(aberta), "aria-controls": idItens });
+    alternar.addEventListener("click", () => {
       this.app.alternarCategoria(categoria.id, itens.hidden);
     });
 
+    const excluir = criar("button", {
+      type: "button",
+      className: "remover remover-categoria",
+      textContent: "×"
+    });
+    definirAria(excluir, { "aria-label": `Excluir categoria ${categoria.nome}` });
+    excluir.addEventListener("click", () => this.excluirCategoria(categoria));
+
+    const cabecalho = criar("div", { className: "categoria-cabecalho" }, [alternar, excluir]);
     return criar("section", { className: "categoria" }, [cabecalho, itens]);
+  }
+
+  /** Excluir uma categoria leva os itens junto, então aqui a confirmação diz quantos são. */
+  private excluirCategoria(categoria: Categoria): void {
+    const total = categoria.itens.length;
+    const itens = total ? ` e os seus ${total} itens` : "";
+    if (!window.confirm(`Excluir a categoria “${categoria.nome}”${itens}?`)) return;
+    this.app.removerCategoria(categoria.id);
+  }
+
+  private criarNovaCategoria(): HTMLElement {
+    const campo = criar("input", {
+      type: "text",
+      id: "nova-categoria",
+      placeholder: "Nova categoria…",
+      autocomplete: "off"
+    });
+    definirAria(campo, { "aria-label": "Nome da nova categoria" });
+
+    const botao = criar("button", { type: "submit", className: "btn-adicionar", textContent: "+" });
+    definirAria(botao, { "aria-label": "Criar categoria" });
+
+    const form = criar("form", { className: "nova-categoria" }, [campo, botao]);
+    form.addEventListener("submit", (evento) => {
+      evento.preventDefault();
+      const nome = campo.value.trim();
+      if (!nome) return;
+      campo.value = "";
+      this.app.adicionarCategoria(nome);
+      campo.focus();
+    });
+
+    return form;
   }
 
   private criarItem(item: Item): HTMLElement {

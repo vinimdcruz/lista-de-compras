@@ -109,6 +109,44 @@ describe("ListaDeCompras", () => {
     assert.equal(app.lista.data, hoje());
   });
 
+  it("cria uma categoria vazia, já aberta, e ignora nome em branco", () => {
+    app.adicionarCategoria("  Padaria  ");
+    app.adicionarCategoria("   ");
+
+    const criada = app.lista.categorias.at(-1);
+    assert.equal(app.lista.categorias.length, 7);
+    assert.equal(criada.nome, "Padaria");
+    assert.deepEqual(criada.itens, []);
+    assert.equal(app.estaAberta(criada.id), true);
+  });
+
+  it("aceita itens na categoria recém-criada", () => {
+    app.adicionarCategoria("Padaria");
+    const criada = app.lista.categorias.at(-1);
+    app.adicionarItem(criada.id, "Pão francês");
+
+    assert.equal(app.lista.categorias.at(-1).itens[0].nome, "Pão francês");
+    assert.equal(app.totalItens, 43);
+  });
+
+  it("remove uma categoria padrão junto com os seus itens", () => {
+    app.removerCategoria("hortifruti");
+
+    assert.equal(app.lista.categorias.length, 5);
+    assert.ok(!app.lista.categorias.some((categoria) => categoria.id === "hortifruti"));
+    assert.equal(app.totalItens, 34, "os 8 itens de Hortifruti saem junto");
+    assert.equal(app.estaAberta("hortifruti"), false, "some também da lista de abertas");
+  });
+
+  it("remover categoria não altera as compras já registradas", () => {
+    app.marcar(idsDosItens(app, "hortifruti")[0].id, true);
+    app.finalizarCompra();
+    app.removerCategoria("hortifruti");
+
+    assert.equal(contarItens(app.historico[0].categorias), 42);
+    assert.equal(app.totalItens, 34);
+  });
+
   it("exclui uma compra do histórico", () => {
     app.marcar(idsDosItens(app, "hortifruti")[0].id, true);
     app.finalizarCompra();

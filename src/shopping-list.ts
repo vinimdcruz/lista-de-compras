@@ -1,4 +1,4 @@
-import { CATALOGO } from "./catalog.js";
+import { CATALOGO, EMOJI_PADRAO } from "./catalog.js";
 import type { RepositorioEstado } from "./storage.js";
 import type { Categoria, Compra, Estado, EstadoLegado, Lista } from "./types.js";
 
@@ -129,6 +129,27 @@ export class ListaDeCompras {
     if (!item) return;
     this.aplicar(() => {
       item.marcado = marcado;
+    });
+  }
+
+  adicionarCategoria(nome: string): void {
+    const rotulo = nome.trim();
+    if (!rotulo) return;
+    const categoria: Categoria = { id: novoId(), nome: rotulo, emoji: EMOJI_PADRAO, itens: [] };
+    this.aplicar(() => {
+      this.estado.atual.categorias.push(categoria);
+      /* Já entra aberta: quem acabou de criar a categoria vai querer preenchê-la. */
+      this.estado.abertas = [...this.estado.abertas, categoria.id];
+    });
+  }
+
+  /** Remove a categoria com todos os seus itens. O histórico já registrado não é afetado. */
+  removerCategoria(idCategoria: string): void {
+    this.aplicar(() => {
+      this.estado.atual.categorias = this.estado.atual.categorias.filter(
+        (categoria) => categoria.id !== idCategoria
+      );
+      this.estado.abertas = this.estado.abertas.filter((id) => id !== idCategoria);
     });
   }
 

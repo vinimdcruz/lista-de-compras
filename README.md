@@ -7,8 +7,11 @@ dependência de runtime.
 ## Funcionalidades
 
 - **Data como título** da lista, editável pelo seletor nativo do aparelho.
-- **Seis categorias em accordion**: Hortifruti & Temperos, Açougue & Peixaria, Laticínios &
-  Frios, Mercearia & Bebidas, Suplementos & Lanches, Limpeza & Casa.
+- **Categorias em accordion**, começando por seis: Hortifruti & Temperos, Açougue & Peixaria,
+  Laticínios & Frios, Mercearia & Bebidas, Suplementos & Lanches, Limpeza & Casa.
+- **Categorias editáveis**: criar quantas quiser e excluir qualquer uma, inclusive as que vêm
+  de fábrica. Excluir uma categoria leva os itens dela junto, com confirmação avisando quantos
+  são.
 - **Itens editáveis**: adicionar item em qualquer categoria e remover qualquer item, inclusive
   os que vêm de fábrica.
 - **Checkbox por item**, com contagem por categoria e barra de progresso geral.

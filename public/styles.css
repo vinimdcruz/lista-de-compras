@@ -108,13 +108,20 @@ body {
   overflow: hidden;
 }
 
-/* Cabeçalho do accordion: alvo de toque com altura confortável no celular. */
+/* Cabeçalho do accordion: alvo de toque com altura confortável no celular.
+   O botão de abrir e o de excluir são irmãos, nunca aninhados. */
+.categoria-cabecalho {
+  display: flex;
+  align-items: stretch;
+}
+
 .categoria-botao {
-  width: 100%;
+  flex: 1;
+  min-width: 0;
   display: flex;
   align-items: center;
-  gap: 0.625rem;
-  padding: 0.875rem 1rem;
+  gap: 0.5rem;
+  padding: 0.875rem 0.25rem 0.875rem 1rem;
   border: 0;
   background: transparent;
   font: inherit;
@@ -125,6 +132,12 @@ body {
 }
 
 .categoria-botao:active { background: var(--fundo); }
+
+/* Estreito e sem folga extra: o nome da categoria tem prioridade pela largura. */
+.remover-categoria {
+  align-self: center;
+  width: 34px;
+}
 
 .categoria-emoji { font-size: 1.25rem; line-height: 1; }
 
@@ -242,6 +255,31 @@ body {
   line-height: 1;
   cursor: pointer;
 }
+
+/* Criação de categoria: mesma gramática visual da linha de adicionar item. */
+.nova-categoria {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--superficie);
+  border: 1px dashed var(--borda);
+  border-radius: var(--raio);
+  padding: 0.5rem;
+}
+
+.nova-categoria input {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-size: 0.9375rem;
+  padding: 0.5rem 0.625rem;
+  min-height: 40px;
+}
+
+.nova-categoria input:focus { outline: 2px solid var(--verde); outline-offset: -1px; border-radius: 8px; }
 
 .acoes {
   max-width: 640px;
