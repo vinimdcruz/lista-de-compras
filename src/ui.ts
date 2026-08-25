@@ -64,6 +64,36 @@ export function confirmar(
   });
 }
 
+/** Aviso via <dialog> nativo, no lugar do window.alert padrão do navegador. */
+export function alertar(mensagem: string, opcoes: { botaoTexto?: string } = {}): Promise<void> {
+  return new Promise((resolve) => {
+    const botaoOk = criar("button", {
+      type: "button",
+      className: "btn-principal",
+      textContent: opcoes.botaoTexto ?? "OK"
+    });
+    const dialogo = criar("dialog", { className: "dialogo-confirmar" }, [
+      criar("p", { textContent: mensagem }),
+      criar("div", { className: "dialogo-acoes" }, [botaoOk])
+    ]);
+
+    const fechar = () => {
+      dialogo.close();
+      dialogo.remove();
+      resolve();
+    };
+    botaoOk.addEventListener("click", fechar);
+    dialogo.addEventListener("cancel", fechar);
+    dialogo.addEventListener("click", (evento) => {
+      if (evento.target === dialogo) fechar();
+    });
+
+    document.body.append(dialogo);
+    dialogo.showModal();
+    botaoOk.focus();
+  });
+}
+
 /** Toast de feedback temporário, com ação opcional (ex: "Ver histórico"). */
 export function mostrarToast(
   mensagem: string,

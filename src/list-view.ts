@@ -1,6 +1,6 @@
 import type { ListaDeCompras } from "./shopping-list.js";
 import type { Categoria, Item } from "./types.js";
-import { confirmar, criar, definirAria, mostrarToast, preservandoFoco } from "./ui.js";
+import { alertar, confirmar, criar, definirAria, mostrarToast, preservandoFoco } from "./ui.js";
 
 export interface ElementosLista {
   lista: HTMLElement;
@@ -75,10 +75,13 @@ export class VistaLista {
   }
 
   /** Excluir uma categoria leva os itens junto, então aqui a confirmação diz quantos são. */
-  private excluirCategoria(categoria: Categoria): void {
+  private async excluirCategoria(categoria: Categoria): Promise<void> {
     const total = categoria.itens.length;
     const itens = total ? ` e os seus ${total} itens` : "";
-    if (!window.confirm(`Excluir a categoria “${categoria.nome}”${itens}?`)) return;
+    const confirmado = await confirmar(`Excluir a categoria “${categoria.nome}”${itens}?`, {
+      confirmarTexto: "Excluir"
+    });
+    if (!confirmado) return;
     this.app.removerCategoria(categoria.id);
   }
 
@@ -146,7 +149,7 @@ export class VistaLista {
 
   private async finalizar(): Promise<void> {
     if (!this.app.totalMarcados) {
-      window.alert("Marque ao menos um item antes de finalizar a compra.");
+      await alertar("Marque ao menos um item antes de finalizar a compra.");
       return;
     }
     const confirmado = await confirmar("Registrar esta compra no histórico e começar uma lista nova?", {
@@ -161,9 +164,10 @@ export class VistaLista {
     });
   }
 
-  private limpar(): void {
+  private async limpar(): Promise<void> {
     if (!this.app.totalMarcados) return;
-    if (!window.confirm("Desmarcar todos os itens da lista?")) return;
+    const confirmado = await confirmar("Desmarcar todos os itens da lista?", { confirmarTexto: "Desmarcar" });
+    if (!confirmado) return;
     this.app.desmarcarTudo();
   }
 }

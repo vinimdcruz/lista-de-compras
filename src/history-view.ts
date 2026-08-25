@@ -1,6 +1,6 @@
 import { contarItens, contarMarcados, type ListaDeCompras } from "./shopping-list.js";
 import type { Compra } from "./types.js";
-import { criar, formatarData } from "./ui.js";
+import { confirmar, criar, formatarData } from "./ui.js";
 
 export interface ElementosHistorico {
   painel: HTMLElement;
@@ -37,8 +37,11 @@ export class VistaHistorico {
       className: "btn-secundario",
       textContent: "Usar como nova lista"
     });
-    usar.addEventListener("click", () => {
-      if (!window.confirm(`Substituir a lista atual pelos itens da compra de ${data}?`)) return;
+    usar.addEventListener("click", async () => {
+      const confirmado = await confirmar(`Substituir a lista atual pelos itens da compra de ${data}?`, {
+        confirmarTexto: "Substituir"
+      });
+      if (!confirmado) return;
       this.app.usarCompraComoNovaLista(compra.id);
       this.aoUsarCompra();
     });
@@ -48,8 +51,9 @@ export class VistaHistorico {
       className: "btn-secundario perigo",
       textContent: "Excluir"
     });
-    excluir.addEventListener("click", () => {
-      if (!window.confirm(`Excluir a compra de ${data} do histórico?`)) return;
+    excluir.addEventListener("click", async () => {
+      const confirmado = await confirmar(`Excluir a compra de ${data} do histórico?`, { confirmarTexto: "Excluir" });
+      if (!confirmado) return;
       this.app.excluirCompra(compra.id);
     });
 
