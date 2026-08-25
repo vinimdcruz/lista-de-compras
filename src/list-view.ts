@@ -1,6 +1,6 @@
 import type { ListaDeCompras } from "./shopping-list.js";
 import type { Categoria, Item } from "./types.js";
-import { criar, definirAria, preservandoFoco } from "./ui.js";
+import { confirmar, criar, definirAria, mostrarToast, preservandoFoco } from "./ui.js";
 
 export interface ElementosLista {
   lista: HTMLElement;
@@ -14,7 +14,8 @@ export interface ElementosLista {
 export class VistaLista {
   constructor(
     private readonly app: ListaDeCompras,
-    private readonly elementos: ElementosLista
+    private readonly elementos: ElementosLista,
+    private readonly aoVerHistorico?: () => void
   ) {
     elementos.finalizar.addEventListener("click", () => this.finalizar());
     elementos.limpar.addEventListener("click", () => this.limpar());
@@ -143,13 +144,21 @@ export class VistaLista {
     return criar("li", { className: "item adicionar" }, [form]);
   }
 
-  private finalizar(): void {
+  private async finalizar(): Promise<void> {
     if (!this.app.totalMarcados) {
       window.alert("Marque ao menos um item antes de finalizar a compra.");
       return;
     }
-    if (!window.confirm("Registrar esta compra no histórico e começar uma lista nova?")) return;
+    const confirmado = await confirmar("Registrar esta compra no histórico e começar uma lista nova?", {
+      confirmarTexto: "Finalizar"
+    });
+    if (!confirmado) return;
+
     this.app.finalizarCompra();
+    mostrarToast("✓ Compra finalizada e salva no histórico.", {
+      acaoTexto: "Ver histórico",
+      aoClicarAcao: this.aoVerHistorico
+    });
   }
 
   private limpar(): void {

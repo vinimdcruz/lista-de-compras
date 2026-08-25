@@ -377,6 +377,62 @@ body {
   margin: 1rem 0 0;
 }
 
+/* Confirmação de finalizar compra: <dialog> nativo no lugar do confirm() do navegador. */
+.dialogo-confirmar {
+  border: 0;
+  border-radius: var(--raio);
+  background: var(--superficie);
+  color: var(--texto);
+  padding: 1.25rem;
+  width: min(320px, calc(100vw - 2.5rem));
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.25);
+}
+
+.dialogo-confirmar::backdrop { background: rgba(0, 0, 0, 0.5); }
+
+.dialogo-confirmar p { margin: 0 0 1rem; font-size: 0.9375rem; }
+
+.dialogo-acoes {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+}
+
+.dialogo-acoes .btn-principal { min-height: 40px; padding: 0.5rem 1rem; }
+
+/* Toast de sucesso ao finalizar compra: some sozinho, fica claro que foi pro histórico. */
+.toast {
+  position: fixed;
+  left: 1rem;
+  right: 1rem;
+  bottom: max(1rem, env(safe-area-inset-bottom));
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  background: var(--texto);
+  color: var(--fundo);
+  border-radius: var(--raio);
+  padding: 0.875rem 1rem;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+  opacity: 0;
+  transform: translateY(0.5rem);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.toast-visivel { opacity: 1; transform: translateY(0); }
+
+.toast-acao {
+  flex-shrink: 0;
+  border: 0;
+  background: transparent;
+  color: var(--verde);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
 @media (prefers-color-scheme: dark) {
   :root {
     --texto: #f3f4f6;
