@@ -1,6 +1,6 @@
 import type { ListaDeCompras } from "./shopping-list.js";
 import type { Categoria, Item } from "./types.js";
-import { criar, definirAria, preservandoFoco } from "./ui.js";
+import { alertar, confirmar, criar, definirAria, mostrarToast, preservandoFoco } from "./ui.js";
 
 export interface ElementosLista {
   lista: HTMLElement;
@@ -14,7 +14,8 @@ export interface ElementosLista {
 export class VistaLista {
   constructor(
     private readonly app: ListaDeCompras,
-    private readonly elementos: ElementosLista
+    private readonly elementos: ElementosLista,
+    private readonly aoVerHistorico?: () => void
   ) {
     elementos.finalizar.addEventListener("click", () => this.finalizar());
     elementos.limpar.addEventListener("click", () => this.limpar());
@@ -74,10 +75,13 @@ export class VistaLista {
   }
 
   /** Excluir uma categoria leva os itens junto, então aqui a confirmação diz quantos são. */
-  private excluirCategoria(categoria: Categoria): void {
+  private async excluirCategoria(categoria: Categoria): Promise<void> {
     const total = categoria.itens.length;
     const itens = total ? ` e os seus ${total} itens` : "";
-    if (!window.confirm(`Excluir a categoria “${categoria.nome}”${itens}?`)) return;
+    const confirmado = await confirmar(`Excluir a categoria “${categoria.nome}”${itens}?`, {
+      confirmarTexto: "Excluir"
+    });
+    if (!confirmado) return;
     this.app.removerCategoria(categoria.id);
   }
 
@@ -143,18 +147,27 @@ export class VistaLista {
     return criar("li", { className: "item adicionar" }, [form]);
   }
 
-  private finalizar(): void {
+  private async finalizar(): Promise<void> {
     if (!this.app.totalMarcados) {
-      window.alert("Marque ao menos um item antes de finalizar a compra.");
+      await alertar("Marque ao menos um item antes de finalizar a compra.");
       return;
     }
-    if (!window.confirm("Registrar esta compra no histórico e começar uma lista nova?")) return;
+    const confirmado = await confirmar("Registrar esta compra no histórico e começar uma lista nova?", {
+      confirmarTexto: "Finalizar"
+    });
+    if (!confirmado) return;
+
     this.app.finalizarCompra();
+    mostrarToast("✓ Compra finalizada e salva no histórico.", {
+      acaoTexto: "Ver histórico",
+      aoClicarAcao: this.aoVerHistorico
+    });
   }
 
-  private limpar(): void {
+  private async limpar(): Promise<void> {
     if (!this.app.totalMarcados) return;
-    if (!window.confirm("Desmarcar todos os itens da lista?")) return;
+    const confirmado = await confirmar("Desmarcar todos os itens da lista?", { confirmarTexto: "Desmarcar" });
+    if (!confirmado) return;
     this.app.desmarcarTudo();
   }
 }

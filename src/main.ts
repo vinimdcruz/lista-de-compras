@@ -12,13 +12,17 @@ const painelLista = exigir("vista-lista");
 const painelHistorico = exigir("vista-historico");
 const progresso = exigir("progresso");
 
-const vistaLista = new VistaLista(app, {
-  lista: exigir("lista"),
-  contador: exigir("contador"),
-  barra: exigir("barra-preenchida"),
-  finalizar: exigir<HTMLButtonElement>("finalizar"),
-  limpar: exigir<HTMLButtonElement>("limpar")
-});
+const vistaLista = new VistaLista(
+  app,
+  {
+    lista: exigir("lista"),
+    contador: exigir("contador"),
+    barra: exigir("barra-preenchida"),
+    finalizar: exigir<HTMLButtonElement>("finalizar"),
+    limpar: exigir<HTMLButtonElement>("limpar")
+  },
+  () => mostrar("historico")
+);
 
 const vistaHistorico = new VistaHistorico(
   app,
