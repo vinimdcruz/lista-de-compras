@@ -1,6 +1,6 @@
 import { CATALOGO, EMOJI_PADRAO } from "./catalog.js";
 import type { RepositorioEstado } from "./storage.js";
-import type { Categoria, Compra, Estado, EstadoLegado, Lista } from "./types.js";
+import type { Categoria, Compra, Estado, EstadoLegado, Lista, ListaEsboco } from "./types.js";
 
 export function novoId(): string {
   return "i" + Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
@@ -196,6 +196,23 @@ export class ListaDeCompras {
       const categorias = structuredClone(compra.categorias);
       desmarcar(categorias);
       this.estado.atual = { data: hoje(), categorias };
+    });
+  }
+
+  /**
+   * Substitui a lista em edição por uma vinda de fora (link de importação). Os ids são
+   * gerados aqui: o esboço traz só nomes. Tudo entra desmarcado e com as categorias abertas.
+   */
+  importarLista(esboco: ListaEsboco): void {
+    const categorias: Categoria[] = esboco.categorias.map((categoria) => ({
+      id: novoId(),
+      nome: categoria.nome,
+      emoji: categoria.emoji,
+      itens: categoria.itens.map((nome) => ({ id: novoId(), nome, marcado: false }))
+    }));
+    this.aplicar(() => {
+      this.estado.atual = { data: hoje(), categorias };
+      this.estado.abertas = categorias.map((categoria) => categoria.id);
     });
   }
 

@@ -398,6 +398,23 @@ body {
   gap: 0.5rem;
 }
 
+/* Campos do diálogo de importação: mesmo visual dos campos de adicionar item. */
+.campo-importar {
+  width: 100%;
+  box-sizing: border-box;
+  margin: 0.75rem 0 0;
+  border: 1px solid var(--borda);
+  border-radius: 8px;
+  background: var(--superficie);
+  color: inherit;
+  font: inherit;
+  font-size: 0.875rem;
+  padding: 0.5rem 0.625rem;
+  resize: vertical;
+}
+
+.campo-importar:focus { outline: 2px solid var(--verde); outline-offset: -1px; }
+
 .dialogo-acoes .btn-principal { min-height: 40px; padding: 0.5rem 1rem; }
 
 /* Toast de sucesso ao finalizar compra: some sozinho, fica claro que foi pro histórico. */

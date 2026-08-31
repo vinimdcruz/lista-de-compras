@@ -33,6 +33,20 @@ export interface Estado {
   abertas: string[];
 }
 
+/**
+ * Lista vinda de fora, lida do link de importação: só nomes, sem ids nem marcas — quem
+ * importa é que gera os ids e a data.
+ */
+export interface CategoriaEsboco {
+  nome: string;
+  emoji: string;
+  itens: string[];
+}
+
+export interface ListaEsboco {
+  categorias: CategoriaEsboco[];
+}
+
 /** Marcas gravadas pela primeira versão do app, migradas na primeira abertura. */
 export interface EstadoLegado {
   marcados: string[];
